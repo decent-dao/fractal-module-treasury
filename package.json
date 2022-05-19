@@ -1,5 +1,5 @@
 {
-  "name": "Treasury Module",
+  "name": "Treasury-Module",
   "version": "0.2.0",
   "scripts": {
     "clean": "hardhat clean",
@@ -44,6 +44,7 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "fractal-contracts-package": "^1.0.0"
+    "fractal-contracts-package": "^1.0.1",
+    "hardhat-dependency-compiler": "^1.1.2"
   }
 }
