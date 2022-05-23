@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 
-import "fractal-contracts-package/ModuleBase.sol";
+import "@fractal-framework/fractal-framework/contracts/ModuleBase.sol";
 import "./interfaces/ITreasuryModule.sol";
 
 /// @notice A treasury module contract for managing a DAOs assets
