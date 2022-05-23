@@ -123,6 +123,15 @@ describe("Treasury Factory", function () {
       );
     });
 
+    it("sets up moduleBase", async () => {
+      expect(await treasury.currentImpl()).to.equal(
+        treasuryImplementationOne.address
+      );
+      expect(await treasury.moduleFactoryBase()).to.equal(
+        treasuryFactory.address
+      );
+    });
+
     it("New version can be added to the version Control", async () => {
       await expect(
         treasuryFactory.addVersion(
