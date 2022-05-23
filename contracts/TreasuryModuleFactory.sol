@@ -5,11 +5,11 @@ import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 import "fractal-contracts-package/ModuleFactoryBase.sol";
-// import "./mocks/ModuleFactoryBase.sol";
+import "./interfaces/ITreasuryModuleFactory.sol";
 import "./interfaces/ITreasuryModule.sol";
 
 /// @notice A factory contract for deploying Treasury Modules
-contract TreasuryModuleFactory is ERC165, ModuleFactoryBase {
+contract TreasuryModuleFactory is ERC165, ModuleFactoryBase, ITreasuryModuleFactory {
     event TreasuryCreated(address indexed treasuryAddress, address indexed accessControl);
 
     function initialize() external initializer {
