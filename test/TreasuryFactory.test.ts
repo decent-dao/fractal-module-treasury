@@ -1,7 +1,7 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
-  AccessControl,
-  AccessControl__factory,
+  AccessControlDAO,
+  AccessControlDAO__factory,
   DAO,
   DAO__factory,
   VotesTokenWithSupply,
@@ -32,7 +32,7 @@ const expect = chai.expect;
 
 describe("Treasury Factory", function () {
   let dao: DAO;
-  let accessControl: AccessControl;
+  let accessControl: AccessControlDAO;
   let treasuryFactory: TreasuryModuleFactory;
   let treasuryImplementationOne: TreasuryModule;
   let treasuryImplementationTwo: TreasuryModule;
@@ -54,13 +54,121 @@ describe("Treasury Factory", function () {
   const withdrawerRoleString = "WITHDRAWER_ROLE";
   const upgraderRoleString = "UPGRADER_ROLE";
 
+  describe("ModuleFactoryBase", function () {
+    beforeEach(async function () {
+      [deployer, withdrawer, userA, userB, upgrader] =
+        await ethers.getSigners();
+
+      dao = await new DAO__factory(deployer).deploy();
+      accessControl = await new AccessControlDAO__factory(deployer).deploy();
+      treasuryFactory = await new TreasuryModuleFactory__factory(
+        deployer
+      ).deploy();
+      treasuryImplementationOne = await new TreasuryModule__factory(
+        deployer
+      ).deploy();
+      treasuryImplementationTwo = await new TreasuryModule__factory(
+        deployer
+      ).deploy();
+
+      const treasuryAddress = await createTreasuryFromFactory(
+        deployer,
+        treasuryFactory,
+        accessControl.address,
+        treasuryImplementationOne.address
+      );
+
+      await treasuryFactory.initialize();
+
+      // eslint-disable-next-line camelcase
+      treasury = TreasuryModule__factory.connect(treasuryAddress, deployer);
+
+      await accessControl
+        .connect(deployer)
+        .initialize(
+          dao.address,
+          [withdrawerRoleString, upgraderRoleString],
+          [daoRoleString, daoRoleString],
+          [[withdrawer.address], [upgrader.address]],
+          [
+            treasury.address,
+            treasury.address,
+            treasury.address,
+            treasury.address,
+            treasury.address,
+            treasury.address,
+          ],
+          [
+            "withdrawEth(address[],uint256[])",
+            "depositERC20Tokens(address[],address[],uint256[])",
+            "withdrawERC20Tokens(address[],address[],uint256[])",
+            "depositERC721Tokens(address[],address[],uint256[])",
+            "withdrawERC721Tokens(address[],address[],uint256[])",
+            "upgradeTo(address)",
+          ],
+          [
+            [withdrawerRoleString],
+            [withdrawerRoleString],
+            [withdrawerRoleString],
+            [withdrawerRoleString],
+            [withdrawerRoleString],
+            [upgraderRoleString],
+          ]
+        );
+
+      await TreasuryDepositEth(
+        treasury,
+        deployer,
+        ethers.utils.parseUnits("10", 18)
+      );
+    });
+
+    it("New version can be added to the version Control", async () => {
+      await expect(
+        treasuryFactory.addVersion(
+          "1.0.0",
+          "hash/uir",
+          treasuryImplementationOne.address
+        )
+      ).to.emit(treasuryFactory, "VersionCreated");
+    });
+
+    it("New version cannot be added by an unauthorized user", async () => {
+      await expect(
+        treasuryFactory
+          .connect(withdrawer)
+          .addVersion("1.0.1", "hash/uir", treasuryImplementationTwo.address)
+      ).to.be.revertedWith("NotAuthorized()");
+    });
+
+    it("Returns current version", async () => {
+      await expect(
+        treasuryFactory.addVersion(
+          "1.0.0",
+          "hash/uir",
+          treasuryImplementationOne.address
+        )
+      ).to.emit(treasuryFactory, "VersionCreated");
+      const version = await treasuryFactory.currentVersionInfo();
+      expect(version[0]).to.eq("1.0.0");
+      expect(version[1]).to.eq("hash/uir");
+      expect(version[2]).to.eq(treasuryImplementationOne.address);
+    });
+
+    it("treasury returns correct factory", async () => {
+      await expect(await treasury.moduleFactoryBase()).to.equal(
+        treasuryFactory.address
+      );
+    });
+  });
+
   describe("Supports authorized upgradeability", function () {
     beforeEach(async function () {
       [deployer, withdrawer, userA, userB, upgrader] =
         await ethers.getSigners();
 
       dao = await new DAO__factory(deployer).deploy();
-      accessControl = await new AccessControl__factory(deployer).deploy();
+      accessControl = await new AccessControlDAO__factory(deployer).deploy();
       treasuryFactory = await new TreasuryModuleFactory__factory(
         deployer
       ).deploy();
@@ -154,7 +262,7 @@ describe("Treasury Factory", function () {
         await ethers.getSigners();
 
       dao = await new DAO__factory(deployer).deploy();
-      accessControl = await new AccessControl__factory(deployer).deploy();
+      accessControl = await new AccessControlDAO__factory(deployer).deploy();
       treasuryFactory = await new TreasuryModuleFactory__factory(
         deployer
       ).deploy();
@@ -333,7 +441,7 @@ describe("Treasury Factory", function () {
       [deployer, withdrawer, userA, userB] = await ethers.getSigners();
 
       dao = await new DAO__factory(deployer).deploy();
-      accessControl = await new AccessControl__factory(deployer).deploy();
+      accessControl = await new AccessControlDAO__factory(deployer).deploy();
       treasuryFactory = await new TreasuryModuleFactory__factory(
         deployer
       ).deploy();
@@ -726,7 +834,7 @@ describe("Treasury Factory", function () {
       [deployer, withdrawer, userA, userB] = await ethers.getSigners();
 
       dao = await new DAO__factory(deployer).deploy();
-      accessControl = await new AccessControl__factory(deployer).deploy();
+      accessControl = await new AccessControlDAO__factory(deployer).deploy();
       treasuryFactory = await new TreasuryModuleFactory__factory(
         deployer
       ).deploy();

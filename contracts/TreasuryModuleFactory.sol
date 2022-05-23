@@ -4,18 +4,24 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
-import "fractal-contracts-package/interfaces/IModuleFactory.sol";
+import "fractal-contracts-package/ModuleFactoryBase.sol";
+// import "./mocks/ModuleFactoryBase.sol";
 import "./interfaces/ITreasuryModule.sol";
 
 /// @notice A factory contract for deploying Treasury Modules
-contract TreasuryModuleFactory is IModuleFactory, ERC165 {
+contract TreasuryModuleFactory is ERC165, ModuleFactoryBase {
     event TreasuryCreated(address indexed treasuryAddress, address indexed accessControl);
+
+    function initialize() external initializer {
+        __initFactoryBase();
+    }
 
     /// @dev Creates a Treasury module
     /// @param data The array of bytes used to create the module
     /// @return address[] The array of addresses of the created module
     function create(bytes[] calldata data)
         external
+        override
         returns (address[] memory)
     {
         address[] memory createdContracts = new address[](1);
@@ -45,7 +51,7 @@ contract TreasuryModuleFactory is IModuleFactory, ERC165 {
         public
         view
         virtual
-        override
+        override(ERC165, ModuleFactoryBase)
         returns (bool)
     {
         return

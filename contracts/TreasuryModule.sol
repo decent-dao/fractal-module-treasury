@@ -18,7 +18,7 @@ contract TreasuryModule is ERC721Holder, ModuleBase, ITreasuryModule {
   function initialize(
         address _accessControl
     ) external initializer {
-        __initBase(_accessControl);
+        __initBase(_accessControl, msg.sender);
     }
 
   /// @notice Allows the contract to receive Ether
