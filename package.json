@@ -1,6 +1,17 @@
 {
-  "name": "Treasury-Module",
-  "version": "0.2.0",
+  "name": "@fractal-framework/treasury-module",
+  "version": "0.0.1",
+  "files": [
+    "contracts/TreasuryModule.sol",
+    "contracts/TreasuryModuleFactory.sol",
+    "contracts/interfaces/ITreasuryModule.sol",
+    "contracts/interfaces/ITreasuryModuleFactory.sol",
+    "typechain-types"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/decent-dao/fractal-module-treasury.git"
+  },
   "scripts": {
     "clean": "hardhat clean",
     "compile": "hardhat compile",
@@ -46,5 +57,17 @@
   "dependencies": {
     "@fractal-framework/fractal-framework": "0.0.1",
     "hardhat-dependency-compiler": "^1.1.2"
-  }
+  },
+  "description": "## Architecture",
+  "bugs": {
+    "url": "https://github.com/decent-dao/fractal-module-treasury/issues"
+  },
+  "homepage": "https://github.com/decent-dao/fractal-module-treasury#readme",
+  "main": ".eslintrc.js",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
