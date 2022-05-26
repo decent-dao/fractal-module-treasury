@@ -36,8 +36,8 @@ const config: HardhatUserConfig = {
   },
   dependencyCompiler: {
     paths: [
-      "@fractal-framework/fractal-framework/contracts/DAO.sol",
-      "@fractal-framework/fractal-framework/contracts/AccessControlDAO.sol",
+      "@fractal-framework/core-contracts/contracts/DAO.sol",
+      "@fractal-framework/core-contracts/contracts/AccessControlDAO.sol",
     ],
   },
   namedAccounts: {
