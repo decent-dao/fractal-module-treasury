@@ -123,15 +123,6 @@ describe("Treasury Factory", function () {
       );
     });
 
-    it("sets up moduleBase", async () => {
-      expect(await treasury.currentImpl()).to.equal(
-        treasuryImplementationOne.address
-      );
-      expect(await treasury.moduleFactoryBase()).to.equal(
-        treasuryFactory.address
-      );
-    });
-
     it("New version can be added to the version Control", async () => {
       await expect(
         treasuryFactory.addVersion(
@@ -158,14 +149,14 @@ describe("Treasury Factory", function () {
           treasuryImplementationOne.address
         )
       ).to.emit(treasuryFactory, "VersionCreated");
-      const version = await treasuryFactory.currentVersionInfo();
+      const version = await treasuryFactory.versionControl(0);
       expect(version[0]).to.eq("1.0.0");
       expect(version[1]).to.eq("hash/uir");
       expect(version[2]).to.eq(treasuryImplementationOne.address);
     });
 
     it("treasury returns correct factory", async () => {
-      await expect(await treasury.moduleFactoryBase()).to.equal(
+      await expect(await treasury.moduleFactory()).to.equal(
         treasuryFactory.address
       );
     });

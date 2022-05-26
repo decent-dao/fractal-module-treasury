@@ -91,6 +91,10 @@ describe("Treasury", function () {
       );
     });
 
+    it("Returns the module name", async () => {
+      expect(await treasury.name()).to.equal("Treasury Module");
+    });
+
     it("Receives Ether", async () => {
       expect(await treasury.provider.getBalance(treasury.address)).to.equal(
         ethers.utils.parseUnits("10", 18)
