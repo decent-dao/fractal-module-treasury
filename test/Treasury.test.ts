@@ -1,7 +1,7 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
-  AccessControlDAO,
-  AccessControlDAO__factory,
+  DAOAccessControl,
+  DAOAccessControl__factory,
   DAO,
   DAO__factory,
   VotesTokenWithSupply,
@@ -27,7 +27,7 @@ const expect = chai.expect;
 
 describe("Treasury", function () {
   let dao: DAO;
-  let accessControl: AccessControlDAO;
+  let accessControl: DAOAccessControl;
   let treasury: TreasuryModule;
 
   // eslint-disable-next-line camelcase
@@ -49,7 +49,7 @@ describe("Treasury", function () {
       [deployer, withdrawer, userA, userB] = await ethers.getSigners();
 
       dao = await new DAO__factory(deployer).deploy();
-      accessControl = await new AccessControlDAO__factory(deployer).deploy();
+      accessControl = await new DAOAccessControl__factory(deployer).deploy();
       treasury = await new TreasuryModule__factory(deployer).deploy();
 
       await accessControl
@@ -204,7 +204,7 @@ describe("Treasury", function () {
       [deployer, withdrawer, userA, userB] = await ethers.getSigners();
 
       dao = await new DAO__factory(deployer).deploy();
-      accessControl = await new AccessControlDAO__factory(deployer).deploy();
+      accessControl = await new DAOAccessControl__factory(deployer).deploy();
       treasury = await new TreasuryModule__factory(deployer).deploy();
 
       await accessControl
@@ -581,7 +581,7 @@ describe("Treasury", function () {
       [deployer, withdrawer, userA, userB] = await ethers.getSigners();
 
       dao = await new DAO__factory(deployer).deploy();
-      accessControl = await new AccessControlDAO__factory(deployer).deploy();
+      accessControl = await new DAOAccessControl__factory(deployer).deploy();
       treasury = await new TreasuryModule__factory(deployer).deploy();
 
       await accessControl
