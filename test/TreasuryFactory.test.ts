@@ -1,7 +1,7 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
-  AccessControlDAO,
-  AccessControlDAO__factory,
+  DAOAccessControl,
+  DAOAccessControl__factory,
   DAO,
   DAO__factory,
   VotesTokenWithSupply,
@@ -33,7 +33,7 @@ const expect = chai.expect;
 
 describe("Treasury Factory", function () {
   let dao: DAO;
-  let accessControl: AccessControlDAO;
+  let accessControl: DAOAccessControl;
   let treasuryFactory: TreasuryModuleFactory;
   let treasuryImplementationOne: TreasuryModule;
   let treasuryImplementationTwo: TreasuryModule;
@@ -62,7 +62,7 @@ describe("Treasury Factory", function () {
 
       await deployments.fixture();
       dao = await new DAO__factory(deployer).deploy();
-      accessControl = await new AccessControlDAO__factory(deployer).deploy();
+      accessControl = await new DAOAccessControl__factory(deployer).deploy();
       treasuryFactory = await ethers.getContract("TreasuryModuleFactory");
       treasuryImplementationOne = await new TreasuryModule__factory(
         deployer
@@ -194,7 +194,7 @@ describe("Treasury Factory", function () {
         await ethers.getSigners();
 
       dao = await new DAO__factory(deployer).deploy();
-      accessControl = await new AccessControlDAO__factory(deployer).deploy();
+      accessControl = await new DAOAccessControl__factory(deployer).deploy();
       treasuryFactory = await new TreasuryModuleFactory__factory(
         deployer
       ).deploy();
@@ -289,7 +289,7 @@ describe("Treasury Factory", function () {
         await ethers.getSigners();
 
       dao = await new DAO__factory(deployer).deploy();
-      accessControl = await new AccessControlDAO__factory(deployer).deploy();
+      accessControl = await new DAOAccessControl__factory(deployer).deploy();
       treasuryFactory = await new TreasuryModuleFactory__factory(
         deployer
       ).deploy();
@@ -469,7 +469,7 @@ describe("Treasury Factory", function () {
       [deployer, withdrawer, userA, userB] = await ethers.getSigners();
 
       dao = await new DAO__factory(deployer).deploy();
-      accessControl = await new AccessControlDAO__factory(deployer).deploy();
+      accessControl = await new DAOAccessControl__factory(deployer).deploy();
       treasuryFactory = await new TreasuryModuleFactory__factory(
         deployer
       ).deploy();
@@ -863,7 +863,7 @@ describe("Treasury Factory", function () {
       [deployer, withdrawer, userA, userB] = await ethers.getSigners();
 
       dao = await new DAO__factory(deployer).deploy();
-      accessControl = await new AccessControlDAO__factory(deployer).deploy();
+      accessControl = await new DAOAccessControl__factory(deployer).deploy();
       treasuryFactory = await new TreasuryModuleFactory__factory(
         deployer
       ).deploy();
