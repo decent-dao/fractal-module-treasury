@@ -13,9 +13,10 @@ import {
   TreasuryModule__factory,
   TreasuryModuleFactory,
   TreasuryModuleFactory__factory,
+  ERC1967Proxy__factory,
 } from "../typechain-types";
 import chai from "chai";
-import { ethers } from "hardhat";
+import { deployments, ethers } from "hardhat";
 import { BigNumber } from "ethers";
 import getInterfaceSelector from "./helpers/getInterfaceSelector";
 import {
@@ -59,11 +60,10 @@ describe("Treasury Factory", function () {
       [deployer, withdrawer, userA, userB, upgrader] =
         await ethers.getSigners();
 
+      await deployments.fixture();
       dao = await new DAO__factory(deployer).deploy();
       accessControl = await new AccessControlDAO__factory(deployer).deploy();
-      treasuryFactory = await new TreasuryModuleFactory__factory(
-        deployer
-      ).deploy();
+      treasuryFactory = await ethers.getContract("TreasuryModuleFactory");
       treasuryImplementationOne = await new TreasuryModule__factory(
         deployer
       ).deploy();
@@ -75,7 +75,8 @@ describe("Treasury Factory", function () {
         deployer,
         treasuryFactory,
         accessControl.address,
-        treasuryImplementationOne.address
+        treasuryImplementationOne.address,
+        ethers.utils.formatBytes32String("hi")
       );
 
       await treasuryFactory.initialize();
@@ -160,6 +161,31 @@ describe("Treasury Factory", function () {
         treasuryFactory.address
       );
     });
+    it("Can predict DAO and Access Control", async () => {
+      const { chainId } = await ethers.provider.getNetwork();
+      const abiCoder = new ethers.utils.AbiCoder();
+      const predictedTreasury = ethers.utils.getCreate2Address(
+        treasuryFactory.address,
+        ethers.utils.solidityKeccak256(
+          ["address", "uint256", "bytes32"],
+          [deployer.address, chainId, ethers.utils.formatBytes32String("hi")]
+        ),
+        ethers.utils.solidityKeccak256(
+          ["bytes", "bytes"],
+          // eslint-disable-next-line camelcase
+          [
+            ERC1967Proxy__factory.bytecode,
+            abiCoder.encode(
+              ["address", "bytes"],
+              [treasuryImplementationOne.address, []]
+            ),
+          ]
+        )
+      );
+
+      // eslint-disable-next-line no-unused-expressions
+      expect(treasury.address).to.eq(predictedTreasury);
+    });
   });
 
   describe("Supports authorized upgradeability", function () {
@@ -183,7 +209,8 @@ describe("Treasury Factory", function () {
         deployer,
         treasuryFactory,
         accessControl.address,
-        treasuryImplementationOne.address
+        treasuryImplementationOne.address,
+        ethers.utils.formatBytes32String("hi")
       );
 
       // eslint-disable-next-line camelcase
@@ -277,7 +304,8 @@ describe("Treasury Factory", function () {
         deployer,
         treasuryFactory,
         accessControl.address,
-        treasuryImplementationOne.address
+        treasuryImplementationOne.address,
+        ethers.utils.formatBytes32String("hi")
       );
 
       // eslint-disable-next-line camelcase
@@ -456,7 +484,8 @@ describe("Treasury Factory", function () {
         deployer,
         treasuryFactory,
         accessControl.address,
-        treasuryImplementationOne.address
+        treasuryImplementationOne.address,
+        ethers.utils.formatBytes32String("hi")
       );
 
       // eslint-disable-next-line camelcase
@@ -849,7 +878,8 @@ describe("Treasury Factory", function () {
         deployer,
         treasuryFactory,
         accessControl.address,
-        treasuryImplementationOne.address
+        treasuryImplementationOne.address,
+        ethers.utils.formatBytes32String("hi")
       );
 
       // eslint-disable-next-line camelcase
