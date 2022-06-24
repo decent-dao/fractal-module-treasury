@@ -10,6 +10,9 @@ import {
   MockERC721__factory,
   TreasuryModule,
   TreasuryModule__factory,
+  ITreasuryModule__factory,
+  IModuleBase__factory,
+  IERC165__factory,
 } from "../typechain-types";
 import chai from "chai";
 import { ethers } from "hardhat";
@@ -22,6 +25,7 @@ import {
   TreasuryDepositERC721Tokens,
   TreasuryWithdrawERC721Tokens,
 } from "./helpers/Index";
+import getInterfaceSelector from "./helpers/getInterfaceSelector";
 
 const expect = chai.expect;
 
@@ -93,6 +97,37 @@ describe("Treasury", function () {
 
     it("Returns the module name", async () => {
       expect(await treasury.name()).to.equal("Treasury Module");
+    });
+
+    it("Supports the expected ERC165 interfaces", async () => {
+      // Supports Treasury Module interface
+      expect(
+        await treasury.supportsInterface(
+          // eslint-disable-next-line camelcase
+          getInterfaceSelector(
+            // eslint-disable-next-line camelcase
+            ITreasuryModule__factory.createInterface()
+          )
+        )
+      ).to.eq(true);
+
+      // Supports ModuleFactoryBase interface
+      expect(
+        await treasury.supportsInterface(
+          getInterfaceSelector(
+            // eslint-disable-next-line camelcase
+            IModuleBase__factory.createInterface()
+          )
+        )
+      ).to.eq(true);
+
+      // Supports ERC-165 interface
+      expect(
+        await dao.supportsInterface(
+          // eslint-disable-next-line camelcase
+          getInterfaceSelector(IERC165__factory.createInterface())
+        )
+      ).to.eq(true);
     });
 
     it("Receives Ether", async () => {
