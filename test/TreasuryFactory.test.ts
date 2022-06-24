@@ -8,12 +8,14 @@ import {
   VotesTokenWithSupply__factory,
   MockERC721,
   MockERC721__factory,
-  IModuleFactory__factory,
+  IModuleFactoryBase__factory,
   TreasuryModule,
   TreasuryModule__factory,
   TreasuryModuleFactory,
   TreasuryModuleFactory__factory,
+  ITreasuryModuleFactory__factory,
   ERC1967Proxy__factory,
+  IERC165__factory,
 } from "../typechain-types";
 import chai from "chai";
 import { deployments, ethers } from "hardhat";
@@ -348,16 +350,35 @@ describe("Treasury Factory", function () {
       );
     });
 
-    it("Supports the expected ERC165 interface", async () => {
-      // Supports Module Factory interface
+    it.only("Supports the expected ERC165 interfaces", async () => {
+      // Supports Treasury Module Factory interface
       expect(
         await treasuryFactory.supportsInterface(
           // eslint-disable-next-line camelcase
-          getInterfaceSelector(IModuleFactory__factory.createInterface())
+          getInterfaceSelector(
+            // eslint-disable-next-line camelcase
+            ITreasuryModuleFactory__factory.createInterface()
+          )
         )
       ).to.eq(true);
+
+      // Supports ModuleFactoryBase interface
+      expect(
+        await treasuryFactory.supportsInterface(
+          getInterfaceSelector(
+            // eslint-disable-next-line camelcase
+            IModuleFactoryBase__factory.createInterface()
+          )
+        )
+      ).to.eq(true);
+
       // Supports ERC-165 interface
-      expect(await treasuryFactory.supportsInterface("0x01ffc9a7")).to.eq(true);
+      expect(
+        await dao.supportsInterface(
+          // eslint-disable-next-line camelcase
+          getInterfaceSelector(IERC165__factory.createInterface())
+        )
+      ).to.eq(true);
     });
 
     it("Receives Ether", async () => {
@@ -431,7 +452,7 @@ describe("Treasury Factory", function () {
           [userA.address],
           [ethers.utils.parseUnits("1", 18)]
         )
-      ).to.be.revertedWith("NotAuthorized()");
+      ).to.be.revertedWith("Ownable: caller is not the owner");
 
       await expect(
         TreasuryWithdrawEth(
