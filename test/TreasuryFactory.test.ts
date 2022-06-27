@@ -8,12 +8,14 @@ import {
   VotesTokenWithSupply__factory,
   MockERC721,
   MockERC721__factory,
-  IModuleFactory__factory,
+  IModuleFactoryBase__factory,
   TreasuryModule,
   TreasuryModule__factory,
   TreasuryModuleFactory,
   TreasuryModuleFactory__factory,
+  ITreasuryModuleFactory__factory,
   ERC1967Proxy__factory,
+  IERC165__factory,
 } from "../typechain-types";
 import chai from "chai";
 import { deployments, ethers } from "hardhat";
@@ -139,7 +141,7 @@ describe("Treasury Factory", function () {
         treasuryFactory
           .connect(withdrawer)
           .addVersion("1.0.1", "hash/uir", treasuryImplementationTwo.address)
-      ).to.be.revertedWith("NotAuthorized()");
+      ).to.be.revertedWith("Ownable: caller is not the owner");
     });
 
     it("Returns current version", async () => {
@@ -216,6 +218,8 @@ describe("Treasury Factory", function () {
       // eslint-disable-next-line camelcase
       treasury = TreasuryModule__factory.connect(treasuryAddress, deployer);
 
+      await treasuryFactory.initialize();
+
       await accessControl
         .connect(deployer)
         .initialize(
@@ -271,15 +275,15 @@ describe("Treasury Factory", function () {
         treasury
           .connect(withdrawer)
           .upgradeTo(treasuryImplementationTwo.address)
-      ).to.be.revertedWith("NotAuthorized()");
+      ).to.be.revertedWith("NotAuthorized");
 
       await expect(
         treasury.connect(userA).upgradeTo(treasuryImplementationTwo.address)
-      ).to.be.revertedWith("NotAuthorized()");
+      ).to.be.revertedWith("NotAuthorized");
 
       await expect(
         treasury.connect(userB).upgradeTo(treasuryImplementationTwo.address)
-      ).to.be.revertedWith("NotAuthorized()");
+      ).to.be.revertedWith("NotAuthorized");
     });
   });
 
@@ -310,6 +314,8 @@ describe("Treasury Factory", function () {
 
       // eslint-disable-next-line camelcase
       treasury = TreasuryModule__factory.connect(treasuryAddress, deployer);
+
+      await treasuryFactory.initialize();
 
       await accessControl
         .connect(deployer)
@@ -348,16 +354,35 @@ describe("Treasury Factory", function () {
       );
     });
 
-    it("Supports the expected ERC165 interface", async () => {
-      // Supports Module Factory interface
+    it("Supports the expected ERC165 interfaces", async () => {
+      // Supports Treasury Module Factory interface
       expect(
         await treasuryFactory.supportsInterface(
           // eslint-disable-next-line camelcase
-          getInterfaceSelector(IModuleFactory__factory.createInterface())
+          getInterfaceSelector(
+            // eslint-disable-next-line camelcase
+            ITreasuryModuleFactory__factory.createInterface()
+          )
         )
       ).to.eq(true);
+
+      // Supports ModuleFactoryBase interface
+      expect(
+        await treasuryFactory.supportsInterface(
+          getInterfaceSelector(
+            // eslint-disable-next-line camelcase
+            IModuleFactoryBase__factory.createInterface()
+          )
+        )
+      ).to.eq(true);
+
       // Supports ERC-165 interface
-      expect(await treasuryFactory.supportsInterface("0x01ffc9a7")).to.eq(true);
+      expect(
+        await dao.supportsInterface(
+          // eslint-disable-next-line camelcase
+          getInterfaceSelector(IERC165__factory.createInterface())
+        )
+      ).to.eq(true);
     });
 
     it("Receives Ether", async () => {
@@ -440,7 +465,7 @@ describe("Treasury Factory", function () {
           [userB.address],
           [ethers.utils.parseUnits("1", 18)]
         )
-      ).to.be.revertedWith("NotAuthorized()");
+      ).to.be.revertedWith("NotAuthorized");
     });
 
     it("Reverts when the withdraw function is called with inequal array lengths", async () => {
@@ -1163,7 +1188,7 @@ describe("Treasury Factory", function () {
           [userA.address],
           [BigNumber.from("0")]
         )
-      ).to.be.revertedWith("NotAuthorized()");
+      ).to.be.revertedWith("NotAuthorized");
     });
 
     it("Reverts when the deposit function is called with inequal array lengths", async () => {
