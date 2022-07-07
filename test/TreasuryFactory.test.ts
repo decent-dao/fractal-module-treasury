@@ -169,8 +169,13 @@ describe("Treasury Factory", function () {
       const predictedTreasury = ethers.utils.getCreate2Address(
         treasuryFactory.address,
         ethers.utils.solidityKeccak256(
-          ["address", "uint256", "bytes32"],
-          [deployer.address, chainId, ethers.utils.formatBytes32String("hi")]
+          ["address", "address", "uint256", "bytes32"],
+          [
+            deployer.address,
+            deployer.address,
+            chainId,
+            ethers.utils.formatBytes32String("hi"),
+          ]
         ),
         ethers.utils.solidityKeccak256(
           ["bytes", "bytes"],
