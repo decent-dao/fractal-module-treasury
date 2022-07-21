@@ -381,33 +381,19 @@ describe("Treasury", function () {
       await TreasuryDepositERC20Tokens(
         treasury,
         withdrawer,
-        [erc20TokenAlpha.address],
-        [userA.address],
-        [ethers.utils.parseUnits("20.0", 18)]
-      );
-
-      await TreasuryDepositERC20Tokens(
-        treasury,
-        withdrawer,
-        [erc20TokenAlpha.address],
-        [userB.address],
-        [ethers.utils.parseUnits("30.0", 18)]
-      );
-
-      await TreasuryDepositERC20Tokens(
-        treasury,
-        withdrawer,
-        [erc20TokenBravo.address],
-        [userA.address],
-        [ethers.utils.parseUnits("40.0", 18)]
-      );
-
-      await TreasuryDepositERC20Tokens(
-        treasury,
-        withdrawer,
-        [erc20TokenBravo.address],
-        [userB.address],
-        [ethers.utils.parseUnits("50.0", 18)]
+        [
+          erc20TokenAlpha.address,
+          erc20TokenAlpha.address,
+          erc20TokenBravo.address,
+          erc20TokenBravo.address,
+        ],
+        [userA.address, userB.address, userA.address, userB.address],
+        [
+          ethers.utils.parseUnits("20.0", 18),
+          ethers.utils.parseUnits("30.0", 18),
+          ethers.utils.parseUnits("40.0", 18),
+          ethers.utils.parseUnits("50.0", 18),
+        ]
       );
 
       expect(await erc20TokenAlpha.balanceOf(userA.address)).to.equal(
@@ -474,33 +460,19 @@ describe("Treasury", function () {
       await TreasuryWithdrawERC20Tokens(
         treasury,
         withdrawer,
-        [erc20TokenAlpha.address],
-        [userA.address],
-        [ethers.utils.parseUnits("20.0", 18)]
-      );
-
-      await TreasuryWithdrawERC20Tokens(
-        treasury,
-        withdrawer,
-        [erc20TokenAlpha.address],
-        [userB.address],
-        [ethers.utils.parseUnits("30.0", 18)]
-      );
-
-      await TreasuryWithdrawERC20Tokens(
-        treasury,
-        withdrawer,
-        [erc20TokenBravo.address],
-        [userA.address],
-        [ethers.utils.parseUnits("40.0", 18)]
-      );
-
-      await TreasuryWithdrawERC20Tokens(
-        treasury,
-        withdrawer,
-        [erc20TokenBravo.address],
-        [userB.address],
-        [ethers.utils.parseUnits("50.0", 18)]
+        [
+          erc20TokenAlpha.address,
+          erc20TokenAlpha.address,
+          erc20TokenBravo.address,
+          erc20TokenBravo.address,
+        ],
+        [userA.address, userB.address, userA.address, userB.address],
+        [
+          ethers.utils.parseUnits("20.0", 18),
+          ethers.utils.parseUnits("30.0", 18),
+          ethers.utils.parseUnits("40.0", 18),
+          ethers.utils.parseUnits("50.0", 18),
+        ]
       );
 
       expect(await erc20TokenAlpha.balanceOf(userA.address)).to.equal(
@@ -754,33 +726,19 @@ describe("Treasury", function () {
       await TreasuryDepositERC721Tokens(
         treasury,
         withdrawer,
-        [erc721TokenAlpha.address],
-        [userA.address],
-        [BigNumber.from("2")]
-      );
-
-      await TreasuryDepositERC721Tokens(
-        treasury,
-        withdrawer,
-        [erc721TokenAlpha.address],
-        [userB.address],
-        [BigNumber.from("3")]
-      );
-
-      await TreasuryDepositERC721Tokens(
-        treasury,
-        withdrawer,
-        [erc721TokenBravo.address],
-        [userA.address],
-        [BigNumber.from("2")]
-      );
-
-      await TreasuryDepositERC721Tokens(
-        treasury,
-        withdrawer,
-        [erc721TokenBravo.address],
-        [userB.address],
-        [BigNumber.from("3")]
+        [
+          erc721TokenAlpha.address,
+          erc721TokenAlpha.address,
+          erc721TokenBravo.address,
+          erc721TokenBravo.address,
+        ],
+        [userA.address, userB.address, userA.address, userB.address],
+        [
+          BigNumber.from("2"),
+          BigNumber.from("3"),
+          BigNumber.from("2"),
+          BigNumber.from("3"),
+        ]
       );
 
       expect(await erc721TokenAlpha.ownerOf(BigNumber.from("2"))).to.equal(
@@ -834,33 +792,19 @@ describe("Treasury", function () {
       await TreasuryWithdrawERC721Tokens(
         treasury,
         withdrawer,
-        [erc721TokenAlpha.address],
-        [userA.address],
-        [BigNumber.from("0")]
-      );
-
-      await TreasuryWithdrawERC721Tokens(
-        treasury,
-        withdrawer,
-        [erc721TokenAlpha.address],
-        [userB.address],
-        [BigNumber.from("1")]
-      );
-
-      await TreasuryWithdrawERC721Tokens(
-        treasury,
-        withdrawer,
-        [erc721TokenBravo.address],
-        [userA.address],
-        [BigNumber.from("0")]
-      );
-
-      await TreasuryWithdrawERC721Tokens(
-        treasury,
-        withdrawer,
-        [erc721TokenBravo.address],
-        [userB.address],
-        [BigNumber.from("1")]
+        [
+          erc721TokenAlpha.address,
+          erc721TokenAlpha.address,
+          erc721TokenBravo.address,
+          erc721TokenBravo.address,
+        ],
+        [userA.address, userB.address, userA.address, userB.address],
+        [
+          BigNumber.from("0"),
+          BigNumber.from("1"),
+          BigNumber.from("0"),
+          BigNumber.from("1"),
+        ]
       );
 
       expect(await erc721TokenAlpha.ownerOf(BigNumber.from("0"))).to.equal(
