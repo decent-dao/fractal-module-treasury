@@ -97,7 +97,7 @@ contract TreasuryModule is ERC721Holder, ModuleBase, ITreasuryModule {
     }
 
     uint256 tokenAddressesLength =  tokenAddresses.length;
-    for (uint256 index = 0; index < tokenAddressesLength; index ++) {
+    for (uint256 index = 0; index < tokenAddressesLength;) {
       IERC20(tokenAddresses[index]).safeTransfer(
         recipients[index],
         amounts[index]
