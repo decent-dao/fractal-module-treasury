@@ -32,6 +32,11 @@ Install necessary dependencies:
 npm install
 ```
 
+Add `.env` values replacing the private key and provider values for desired networks
+```shell
+cp .env.example .env
+```
+
 Compile contracts to create typechain files:
 ```shell
 npm run compile
@@ -42,12 +47,18 @@ Run the tests
 npm run test
 ```
 
+## Deploy Contract to <network>
+```shell
+npx hardhat deploy --network <network>
+```
+
 ## Local Hardhat deployment
 
-To deploy the base Fractal contracts open a terminal and run:
+To deploy the base Fractal contracts open a terminal and first run:
 ```shell
 npx hardhat node
 ```
+
 This will deploy the following contracts and log the addresses they were deployed to:
  - TreasuryModuleFactory
  - Treasury Implementation
