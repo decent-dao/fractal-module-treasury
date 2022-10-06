@@ -1,3 +1,6 @@
+Update the README to indicate this repository is deprecated.
+Need to create a PR to do this since we can't push directly to main.
+
 # Fractal - Treasury Module
 
 ## Architecture
